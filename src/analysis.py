@@ -6,6 +6,8 @@ from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 from sklearn.impute import SimpleImputer
+from sklearn.cluster import KMeans
+
 
 file_path = 'data\marketing_campaign.csv'
 df = pd.read_csv(file_path, delimiter='\t')
@@ -99,3 +101,22 @@ print("Scaled Features Head:")
 print(df_scaled.head())
 
 
+# Instantiate KMeans model
+kmeans = KMeans(n_clusters=3, random_state=42)
+
+# Fit the model to the scaled data
+kmeans.fit(df_scaled)
+
+# Get cluster labels
+cluster_labels = kmeans.labels_
+
+# Add cluster labels to the original DataFrame
+df['Cluster'] = cluster_labels
+
+# Visualize the clusters
+plt.figure(figsize=(10, 6))
+sns.scatterplot(data=df, x='Income', y='MntWines', hue='Cluster', palette='viridis', legend='full')
+plt.title('Clustering of Customers')
+plt.xlabel('Income')
+plt.ylabel('Spending on Wines')
+plt.show()
